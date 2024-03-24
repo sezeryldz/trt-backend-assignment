@@ -8,6 +8,7 @@ import argon2 from "argon2";
 import debug from "debug";
 // Jsonwebtoken library is for generating jwt tokens
 import jwt from "jsonwebtoken";
+import googleAuthService from "../services/google.auth.service";
 
 const log: debug.IDebugger = debug("app:users-controller");
 class UsersController {
@@ -58,6 +59,18 @@ class UsersController {
         message: "Incorrect Password.",
       });
     }
+  }
+
+  loginWithGoogle(req: express.Request, res: express.Response) {
+    res.redirect(googleAuthService.oAuthLink());
+  }
+
+  async loginWithGoogleCallback(req, res) {
+    const { code } = req.query;
+
+    res.send(await googleAuthService.oAuthCallback(code));
+
+    // todo we should seek the returned mail and register that mail so we can have clean logic that we can connect to tasks..
   }
 
   async resetPassword(req: express.Request, res: express.Response) {

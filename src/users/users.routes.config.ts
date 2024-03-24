@@ -36,6 +36,12 @@ export class UsersRoutes extends CommonRoutesConfig {
         UsersController.createUser
       );
 
+    this.app.route("/users/login/google").get(UsersController.loginWithGoogle);
+
+    this.app
+      .route("/users/login/google/callback")
+      .get(UsersController.loginWithGoogleCallback);
+
     this.app
       .route("/users/login")
       .post(

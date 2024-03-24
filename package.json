@@ -38,6 +38,7 @@
   "dependencies": {
     "@prisma/client": "^5.11.0",
     "argon2": "^0.40.1",
+    "axios": "^1.6.8",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
     "email-validator": "^2.0.4",
