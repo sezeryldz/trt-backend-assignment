@@ -6,6 +6,7 @@ import cors from "cors";
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UsersRoutes } from "./users/users.routes.config";
 import debug from "debug";
+import { rateLimit } from "express-rate-limit";
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -16,8 +17,25 @@ const debugLog: debug.IDebugger = debug("app");
 // Adding middleware to parse all incoming requests as JSON
 app.use(express.json());
 
-//  allow cross-origin requests
-app.use(cors());
+// Cross origin security
+// Should be able to protect against cross-site scripting (XSS) and cross-site request forgery (CSRF).
+app.use(
+  cors({
+    origin: "http://localhost",
+  })
+);
+
+// This is for throttling requests
+// 50 Request per 15 min.
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+});
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter);
 
 // Preparing the expressWinston logging middleware configuration,
 // which will automatically log all HTTP requests handled by Express.js
