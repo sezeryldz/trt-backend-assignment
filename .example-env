@@ -1,0 +1,17 @@
+# MongoDB database URL
+DATABASE_URL="mongodb+srv://db-admin:password@localhost/backend-database?retryWrites=true&w=majority&appName=ClusterM1"
+
+# Secret key for generating access tokens, must be random long string
+ACCESS_TOKEN_SECRET=""
+
+# Admin key for accessing API endpoints requiring admin privileges
+API_ADMIN_KEY=""
+
+# Google OAuth2 client ID
+GOOGLE_CLIENT_ID=""
+
+# Google OAuth2 client secret
+GOOGLE_CLIENT_SECRET=""
+
+# Redirect URI for Google OAuth2 authentication callback
+GOOGLE_REDIRECT_URI="http://localhost/users/login/google/callback"
