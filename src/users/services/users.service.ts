@@ -1,15 +1,31 @@
 import debug from "debug";
 import { CreateUserDto } from "../dto/create.user.dto";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+
+/**
+ * Debug instance for logging.
+ */
 const log: debug.IDebugger = debug("app:prisma-service");
+
+/**
+ * Prisma client instance.
+ */
 const prisma = new PrismaClient();
 
+/**
+ * Service class for handling user-related operations.
+ */
 class PrismaUsersService {
   constructor() {
     log("Created new instance of User");
   }
 
-  async create(user: CreateUserDto) {
+  /**
+   * Creates a new user.
+   * @param user The user data to create.
+   * @returns The created user.
+   */
+  async create(user: CreateUserDto): Promise<{ user: User }> {
     const prismaUser = await prisma.user.create({
       data: {
         email: user.email,
@@ -22,7 +38,12 @@ class PrismaUsersService {
     };
   }
 
-  async deleteById(userId: string) {
+  /**
+   * Deletes a user by ID.
+   * @param userId The ID of the user to delete.
+   * @returns The deleted user.
+   */
+  async deleteById(userId: string): Promise<User | null> {
     const deleteUser = await prisma.user.delete({
       where: {
         id: userId,
@@ -31,11 +52,20 @@ class PrismaUsersService {
     return deleteUser;
   }
 
-  async listUsers() {
+  /**
+   * Retrieves a list of all users.
+   * @returns An array of users.
+   */
+  async listUsers(): Promise<User[]> {
     return await prisma.user.findMany();
   }
 
-  async getUserByEmail(email: string) {
+  /**
+   * Retrieves a user by email.
+   * @param email The email of the user to retrieve.
+   * @returns The user if found, otherwise null.
+   */
+  async getUserByEmail(email: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: {
         email: email,
@@ -43,7 +73,12 @@ class PrismaUsersService {
     });
   }
 
-  async getUserById(id: string) {
+  /**
+   * Retrieves a user by ID.
+   * @param id The ID of the user to retrieve.
+   * @returns The user if found, otherwise null.
+   */
+  async getUserById(id: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: {
         id: id,
@@ -51,7 +86,13 @@ class PrismaUsersService {
     });
   }
 
-  async updatePassword(email: string, password: string) {
+  /**
+   * Updates a user's password.
+   * @param email The email of the user to update.
+   * @param password The new password.
+   * @returns The updated user.
+   */
+  async updatePassword(email: string, password: string): Promise<User | null> {
     return await prisma.user.update({
       where: {
         email: email,

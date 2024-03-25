@@ -3,6 +3,11 @@ import TaskService from "../services/tasks.service";
 import CreateTaskDto from "../dto/create.task.dto";
 
 class TaskController {
+  /**
+   * Create a new task.
+   * @param req Request object
+   * @param res Response object
+   */
   async createTask(req: Request, res: Response) {
     try {
       const taskData: CreateTaskDto = req.body;
@@ -13,6 +18,11 @@ class TaskController {
     }
   }
 
+  /**
+   * Get all tasks. \Admin Only/
+   * @param req Request object
+   * @param res Response object
+   */
   async getAllTasks(req: Request, res: Response) {
     try {
       const tasks = await TaskService.getAllTasks();
@@ -22,6 +32,11 @@ class TaskController {
     }
   }
 
+  /**
+   * Get tasks for a specific user with pagination, filtering and sorting.
+   * @param req Request object
+   * @param res Response object
+   */
   async getUsersTasks(req: Request, res: Response) {
     try {
       const userId = req.body.userId;
@@ -75,6 +90,11 @@ class TaskController {
     }
   }
 
+  /**
+   * Get a task by its ID.
+   * @param req Request object
+   * @param res Response object
+   */
   async getTaskById(req: Request, res: Response) {
     try {
       const taskId = req.params.taskId;
@@ -89,6 +109,11 @@ class TaskController {
     }
   }
 
+  /**
+   * Update a task by its ID.
+   * @param req Request object
+   * @param res Response object
+   */
   async updateTask(req: Request, res: Response) {
     try {
       const taskId = req.params.taskId;
@@ -104,6 +129,11 @@ class TaskController {
     }
   }
 
+  /**
+   * Delete a task by its ID.
+   * @param req Request object
+   * @param res Response object
+   */
   async deleteTask(req: Request, res: Response) {
     try {
       const taskId = req.params.taskId;

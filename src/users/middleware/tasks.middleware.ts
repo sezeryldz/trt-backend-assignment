@@ -1,7 +1,16 @@
 import express from "express";
 import prismaTasksService from "../services/tasks.service";
 
+/**
+ * Middleware for handling task-related operations.
+ */
 class TaskMiddleware {
+  /**
+   * Middleware to validate required task fields.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateTaskFields(
     req: express.Request,
     res: express.Response,
@@ -16,14 +25,22 @@ class TaskMiddleware {
     }
   }
 
+  /**
+   * Middleware to check if task belongs to the user making the request.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async taskBelongsToUser(
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) {
     const taskId = req.params.taskId;
-    const userId = req.body.userId; // Assuming you have userId in the request body
+    const userId = req.body.userId;
+
     const task = await prismaTasksService.getTaskById(taskId);
+
     if (task && task.userId === userId) {
       next();
     } else {
@@ -33,13 +50,21 @@ class TaskMiddleware {
     }
   }
 
+  /**
+   * Middleware to validate if a task with given ID exists.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateTaskExists(
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) {
     const taskId = req.params.taskId;
+
     const task = await prismaTasksService.getTaskById(taskId);
+
     if (task) {
       next();
     } else {

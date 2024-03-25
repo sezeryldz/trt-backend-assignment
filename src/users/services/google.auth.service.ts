@@ -1,15 +1,31 @@
 import debug from "debug";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+
+/**
+ * Debug instance for logging.
+ */
 const log: debug.IDebugger = debug("app:prisma-service");
 
+/**
+ * Service for handling Google OAuth authentication.
+ */
 class GoogleAuthService {
+  /**
+   * Generates the OAuth login link for Google authentication.
+   * @returns The OAuth login link.
+   */
   oAuthLink() {
     const loginLink = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&response_type=code&scope=profile email`;
     return loginLink;
   }
 
-  async oAuthCallback(code) {
+  /**
+   * Handles the OAuth callback from Google.
+   * @param code The authorization code received from Google.
+   * @returns Object containing the login message, user email, and access token.
+   */
+  async oAuthCallback(code: string) {
     try {
       // Exchange authorization code for access token
       const { data } = await axios.post("https://oauth2.googleapis.com/token", {
@@ -42,7 +58,7 @@ class GoogleAuthService {
       );
 
       return {
-        message: "Logged in with google succesfully.",
+        message: "Logged in with Google successfully.",
         email: profile.email,
         accessToken: accessToken,
       };

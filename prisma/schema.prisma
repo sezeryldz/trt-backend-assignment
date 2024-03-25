@@ -1,31 +1,32 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+// Define the Prisma client
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // Use Prisma Client for JavaScript
 }
 
+// Define the MongoDB datasource
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "mongodb" // Use MongoDB as the data source
+  url      = env("DATABASE_URL") // Get the database URL from the environment variables
 }
 
+// Define the User model
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  password  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  tasks     Task[]
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId // Unique identifier for the user
+  email     String   @unique // User's email address, must be unique
+  password  String? // User's password (optional)
+  createdAt DateTime @default(now()) // Date and time when the user was created
+  updatedAt DateTime @default(now()) // Date and time when the user was last updated
+  tasks     Task[] // List of tasks associated with the user
 }
 
+// Define the Task model
 model Task {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  status      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  userId      String   @db.ObjectId
-  user        User     @relation(fields: [userId], references: [id])
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId // Unique identifier for the task
+  title       String // Title of the task
+  description String // Description of the task
+  status      String // Status of the task (e.g., pending, completed, in progress)
+  createdAt   DateTime @default(now()) // Date and time when the task was created
+  updatedAt   DateTime @default(now()) // Date and time when the task was last updated
+  userId      String   @db.ObjectId // ID of the user to whom the task belongs
+  user        User     @relation(fields: [userId], references: [id]) // Reference to the user who owns the task
 }

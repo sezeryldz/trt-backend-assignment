@@ -1,9 +1,6 @@
 import express from "express";
 import userService from "../services/users.service";
-//Simple email validation.
 import * as EmailValidator from "email-validator";
-
-// jsonwebtoken library is for generating jwt tokens
 import jwt from "jsonwebtoken";
 
 interface JWTI {
@@ -13,7 +10,16 @@ interface JWTI {
   };
 }
 
+/**
+ * Middleware for handling user-related operations.
+ */
 class UsersMiddleware {
+  /**
+   * Middleware to validate email field.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateEmailField(
     req: express.Request,
     res: express.Response,
@@ -28,12 +34,17 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to validate password field.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validatePasswordField(
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) {
-    // Simple check if password is longer than two chacters / is exist.
     if (req.body && req.body.password && req.body.password.length > 2) {
       next();
     } else {
@@ -43,6 +54,12 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to check if email is already registered.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateSameEmailDoesntExist(
     req: express.Request,
     res: express.Response,
@@ -56,6 +73,12 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to check if email is registered.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateEmailRegistered(
     req: express.Request,
     res: express.Response,
@@ -69,6 +92,12 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to validate if email belongs to the same user.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateSameEmailBelongToSameUser(
     req: express.Request,
     res: express.Response,
@@ -82,6 +111,12 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to validate if a user with given ID exists.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async validateUserExists(
     req: express.Request,
     res: express.Response,
@@ -97,6 +132,12 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to include user ID in the request body.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async includeUserId(
     req: express.Request,
     res: express.Response,
@@ -107,6 +148,12 @@ class UsersMiddleware {
     next();
   }
 
+  /**
+   * Middleware to extract user ID from request parameters.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async extractUserId(
     req: express.Request,
     res: express.Response,
@@ -116,6 +163,12 @@ class UsersMiddleware {
     next();
   }
 
+  /**
+   * Middleware to check admin token.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async adminTokenCheck(
     req: express.Request,
     res: express.Response,
@@ -139,6 +192,12 @@ class UsersMiddleware {
     }
   }
 
+  /**
+   * Middleware to check access token.
+   * @param req Request object
+   * @param res Response object
+   * @param next Next function
+   */
   async accessTokenCheck(
     req: express.Request,
     res: express.Response,
