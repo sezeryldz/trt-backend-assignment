@@ -156,7 +156,9 @@ describe("Emulating a User", function () {
         if (err) {
           return done(err);
         }
-        console.log("Updated task title: " + fakeTask.title);
+        console.log(
+          "Updated task title: " + selectedTask.title + " -> " + fakeTask.title
+        );
         return done();
       });
   });
@@ -172,8 +174,7 @@ describe("Emulating a User", function () {
         if (err) {
           return done(err);
         }
-        console.log("Removed Task: ");
-        console.log(res.body);
+        console.log("Removed Task Title: " + res.body.title);
         return done();
       });
   });
