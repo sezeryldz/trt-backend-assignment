@@ -74,9 +74,17 @@ class UsersController {
         const createdUser = await PrismaUsersService.create({
           email: userData.email,
         });
-        res.status(201).send(createdUser);
+        res.status(201).send({
+          message: "Logged in successfully.",
+          accessCode: userData.accessToken,
+          email: createdUser.user.email,
+        });
       } else {
-        res.status(201).send(user);
+        res.status(201).send({
+          message: "Logged in successfully.",
+          accessCode: userData.accessToken,
+          email: user.email,
+        });
       }
     } catch (error) {
       console.error("Error:", error.message);

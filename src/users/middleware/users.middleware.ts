@@ -97,6 +97,16 @@ class UsersMiddleware {
     }
   }
 
+  async includeUserId(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    const user = await userService.getUserByEmail(req.body.hostEmail);
+    req.body.userId = user.id;
+    next();
+  }
+
   async extractUserId(
     req: express.Request,
     res: express.Response,

@@ -4,9 +4,10 @@ import * as winston from "winston";
 import * as expressWinston from "express-winston";
 import cors from "cors";
 import { CommonRoutesConfig } from "./common/common.routes.config";
-import { UsersRoutes } from "./users/users.routes.config";
+import { UsersRoutes } from "./routes/users.routes.config";
 import debug from "debug";
 import { rateLimit } from "express-rate-limit";
+import { TasksRoutes } from "./routes/tasks.routes.config";
 
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
@@ -47,6 +48,10 @@ const loggerOptions: expressWinston.LoggerOptions = {
     winston.format.colorize({ all: true })
   ),
 };
+
+// Adding routes
+routes.push(new UsersRoutes(app)); // Add UsersRoutes
+routes.push(new TasksRoutes(app)); // Add TasksRoutes
 
 if (!process.env.DEBUG) {
   loggerOptions.meta = false; // when not debugging, log requests as one-liners
