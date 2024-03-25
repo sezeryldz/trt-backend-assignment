@@ -1,5 +1,5 @@
 import express from "express";
-import userService from "../services/prisma.users.service";
+import userService from "../services/users.service";
 //Simple email validation.
 import * as EmailValidator from "email-validator";
 

@@ -1,5 +1,5 @@
 import express from "express";
-import prismaTasksService from "../services/prisma.tasks.service";
+import prismaTasksService from "../services/tasks.service";
 
 class TaskMiddleware {
   async validateTaskFields(

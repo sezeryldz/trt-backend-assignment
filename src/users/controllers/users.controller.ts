@@ -1,7 +1,7 @@
 // Express to add types to the request/response objects from our controller functions
 import express from "express";
 // Newly created prisma services
-import PrismaUsersService from "../services/prisma.users.service";
+import PrismaUsersService from "../services/users.service";
 // The argon2 library for password hashing
 import argon2 from "argon2";
 // Utilizing debug with a custom context as described

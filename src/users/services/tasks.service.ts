@@ -22,12 +22,31 @@ class TaskService {
     return task;
   }
 
-  async getUsersTasks(userId: string): Promise<Task[]> {
-    return await prisma.task.findMany({
+  async getUsersTasksWithPagination(
+    userId: string,
+    filters: any,
+    orderBy: any,
+    startIndex: number,
+    endIndex: number
+  ): Promise<{ data: Task[]; count: number }> {
+    const tasks = await prisma.task.findMany({
       where: {
+        ...filters,
+        userId: userId,
+      },
+      orderBy: { createdAt: orderBy },
+      skip: startIndex,
+      take: endIndex - startIndex,
+    });
+
+    const count = await prisma.task.count({
+      where: {
+        ...filters,
         userId: userId,
       },
     });
+
+    return { data: tasks, count };
   }
 
   async getAllTasks(): Promise<Task[]> {

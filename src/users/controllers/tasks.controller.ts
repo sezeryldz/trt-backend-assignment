@@ -1,16 +1,12 @@
 import { Request, Response } from "express";
-import prismaTasksService from "../services/prisma.tasks.service";
+import TaskService from "../services/tasks.service";
 import CreateTaskDto from "../dto/create.task.dto";
 
 class TaskController {
   async createTask(req: Request, res: Response) {
-    console.log(req);
     try {
       const taskData: CreateTaskDto = req.body;
-      const task = await prismaTasksService.createTask(
-        req.body.userId,
-        taskData
-      );
+      const task = await TaskService.createTask(req.body.userId, taskData);
       res.status(201).json(task);
     } catch (error) {
       res.status(500).json({ message: "Error: " + error });
@@ -19,7 +15,7 @@ class TaskController {
 
   async getAllTasks(req: Request, res: Response) {
     try {
-      const tasks = await prismaTasksService.getAllTasks();
+      const tasks = await TaskService.getAllTasks();
       res.json(tasks);
     } catch (error) {
       res.status(500).json({ message: "Error: " + error });
@@ -28,8 +24,52 @@ class TaskController {
 
   async getUsersTasks(req: Request, res: Response) {
     try {
-      const tasks = await prismaTasksService.getUsersTasks(req.body.userId);
-      res.json(tasks);
+      const userId = req.body.userId;
+      const {
+        page = 1,
+        limit = 10,
+        status = "in progress",
+        orderBy = "asc",
+      } = req.body;
+
+      // Define filters based on the request body
+      const filters: any = { userId };
+      if (status) {
+        filters.status = status;
+      }
+
+      // Calculate pagination parameters
+      const startIndex =
+        (parseInt(page as string) - 1) * parseInt(limit as string);
+      const endIndex = parseInt(page as string) * parseInt(limit as string);
+
+      // Retrieve tasks with applied filters and pagination
+      const tasks = await TaskService.getUsersTasksWithPagination(
+        userId,
+        filters,
+        orderBy,
+        startIndex,
+        endIndex
+      );
+
+      // Prepare response with pagination metadata
+      const response: any = {};
+      if (endIndex < tasks.count) {
+        response.next = {
+          page: parseInt(page as string) + 1,
+          limit: parseInt(limit as string),
+        };
+      }
+      if (startIndex > 0) {
+        response.prev = {
+          page: parseInt(page as string) - 1,
+          limit: parseInt(limit as string),
+        };
+      }
+      response.totalPages = Math.ceil(tasks.count / parseInt(limit as string));
+      response.tasks = tasks.data;
+
+      res.json(response);
     } catch (error) {
       res.status(500).json({ message: "Error: " + error });
     }
@@ -38,7 +78,7 @@ class TaskController {
   async getTaskById(req: Request, res: Response) {
     try {
       const taskId = req.params.taskId;
-      const task = await prismaTasksService.getTaskById(taskId);
+      const task = await TaskService.getTaskById(taskId);
       if (!task) {
         res.status(404).json({ message: "Task not found" });
         return;
@@ -53,10 +93,7 @@ class TaskController {
     try {
       const taskId = req.params.taskId;
       const updatedTaskData: CreateTaskDto = req.body;
-      const updatedTask = await prismaTasksService.updateTask(
-        taskId,
-        updatedTaskData
-      );
+      const updatedTask = await TaskService.updateTask(taskId, updatedTaskData);
       if (!updatedTask) {
         res.status(404).json({ message: "Task not found" });
         return;
@@ -70,7 +107,7 @@ class TaskController {
   async deleteTask(req: Request, res: Response) {
     try {
       const taskId = req.params.taskId;
-      const deletedTask = await prismaTasksService.deleteTask(taskId);
+      const deletedTask = await TaskService.deleteTask(taskId);
       if (!deletedTask) {
         res.status(404).json({ message: "Task not found" });
         return;
