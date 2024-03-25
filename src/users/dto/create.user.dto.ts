@@ -1,7 +1,7 @@
 export interface CreateUserDto {
-  id: string;
+  id?: string;
   email: string;
-  password: string;
+  password?: string;
   updatedAt?: string;
   createdAt?: string;
   accessToken?: string;

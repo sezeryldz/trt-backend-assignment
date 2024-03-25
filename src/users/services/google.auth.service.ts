@@ -1,10 +1,7 @@
 import debug from "debug";
 import axios from "axios";
 import jwt from "jsonwebtoken";
-
-import { PrismaClient } from "@prisma/client";
 const log: debug.IDebugger = debug("app:prisma-service");
-const prisma = new PrismaClient();
 
 class GoogleAuthService {
   oAuthLink() {

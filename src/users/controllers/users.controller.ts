@@ -67,10 +67,20 @@ class UsersController {
 
   async loginWithGoogleCallback(req, res) {
     const { code } = req.query;
-
-    res.send(await googleAuthService.oAuthCallback(code));
-
-    // todo we should seek the returned mail and register that mail so we can have clean logic that we can connect to tasks..
+    try {
+      const userData = await googleAuthService.oAuthCallback(code);
+      const user = await PrismaUsersService.getUserByEmail(userData.email);
+      if (!user) {
+        const createdUser = await PrismaUsersService.create({
+          email: userData.email,
+        });
+        res.status(201).send(createdUser);
+      } else {
+        res.status(201).send(user);
+      }
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
   }
 
   async resetPassword(req: express.Request, res: express.Response) {

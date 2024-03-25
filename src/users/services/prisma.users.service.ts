@@ -57,6 +57,7 @@ class PrismaUsersService {
         email: email,
       },
       data: {
+        updatedAt: new Date().toISOString(),
         password: password,
       },
     });
